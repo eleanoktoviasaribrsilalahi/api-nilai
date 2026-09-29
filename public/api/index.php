@@ -65,10 +65,9 @@ function tentukanGrade(float $nilai): string
     return 'E';
 }
 
-
-// ===============================
-// ROUTING
-// ===============================
+/* ===============================
+   ROUTING
+   =============================== */
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -77,8 +76,6 @@ $path = rtrim(
     '/'
 );
 
-
-// Hanya menerima /api/nilai
 if ($path !== '/api/nilai') {
     kirim(404, [
         'status' => 'error',
@@ -86,13 +83,11 @@ if ($path !== '/api/nilai') {
     ]);
 }
 
-
-// ===============================
-// GET /api/nilai
-// ===============================
+/* ===============================
+   GET /api/nilai
+   =============================== */
 
 if ($method === 'GET') {
-
     $data = bacaData();
 
     kirim(200, [
@@ -102,10 +97,9 @@ if ($method === 'GET') {
     ]);
 }
 
-
-// ===============================
-// POST /api/nilai
-// ===============================
+/* ===============================
+   POST /api/nilai
+   =============================== */
 
 if ($method === 'POST') {
 
@@ -128,32 +122,23 @@ if ($method === 'POST') {
 
     $error = [];
 
-
-    // Validasi NIM
     if ($nim === '') {
         $error[] = 'nim wajib diisi';
     } elseif (!preg_match('/^\d{8,}$/', $nim)) {
         $error[] = 'nim harus berupa angka minimal 8 digit';
     }
 
-
-    // Validasi nama
     if ($nama === '') {
         $error[] = 'nama wajib diisi';
     }
 
-
-    // Validasi mata kuliah
     if ($mataKuliah === '') {
         $error[] = 'mata_kuliah wajib diisi';
     }
 
-
-    // Validasi nilai
     if (!is_numeric($nilai) || $nilai < 0 || $nilai > 100) {
         $error[] = 'nilai harus angka 0 sampai 100';
     }
-
 
     if ($error) {
         kirim(400, [
@@ -163,18 +148,13 @@ if ($method === 'POST') {
         ]);
     }
 
-
     $data = bacaData();
 
-
-    // ID otomatis
     $idBaru = $data
         ? max(array_column($data, 'id')) + 1
         : 1;
 
-
     $nilai = (float) $nilai;
-
 
     $baru = [
         'id' => $idBaru,
@@ -186,11 +166,9 @@ if ($method === 'POST') {
         'grade' => tentukanGrade($nilai)
     ];
 
-
     $data[] = $baru;
 
     simpanData($data);
-
 
     kirim(201, [
         'status' => 'success',
@@ -198,11 +176,6 @@ if ($method === 'POST') {
         'data' => $baru
     ]);
 }
-
-
-// ===============================
-// METHOD LAIN
-// ===============================
 
 header('Allow: GET, POST');
 
