@@ -2,7 +2,7 @@ FROM php:8.2-cli
 
 WORKDIR /app
 
-COPY public /app/public
+COPY . .
 
 EXPOSE 80
 
